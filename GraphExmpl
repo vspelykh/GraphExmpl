@@ -1,0 +1,56 @@
+ /*  Пример графа (за книгой "Грокаем алгоритмы", Адитья Бхаргава)
+        @vspelykh
+ */
+
+public class GraphExmpl {
+
+    public static void main(String[] args) {
+        System.out.println(new GraphExmpl().search());
+    }
+
+    private String search() {
+
+        Map<String, String[]> graph = getGraph(); // создаем граф
+        Set<String> checked = new HashSet<>(); // для хранения людей, которые уже были проверены
+        Deque<String> deque = new ArrayDeque<>(); // очередь
+
+        deque.addFirst("you"); // добавляем цель
+
+        while (!deque.isEmpty()){
+            String person = deque.pollFirst();
+            if (isSeller(person)){ // если человек соответствует
+                return person; // возвращаем
+            }else {
+                checked.add(person);
+                String[] friends = graph.get(person);
+                if (friends != null) {
+                    for (String friend : friends){ // добавляем его друзей в очередь
+                        if (!checked.contains(friend))
+                        deque.addLast(friend);
+                    }
+                }
+            }
+
+        }
+        return null;
+    }
+
+    private static boolean isSeller(String person) { // тестовая проверка
+        return person.equals("annuj") || person.equals("thom");
+    }
+
+    private Map<String, String[]> getGraph() { // пример графа
+        Map<String, String[]> map = new HashMap<>();
+        map.put("you", new String[]{"alice", "bob", "claire"});
+        map.put("bob", new String[]{"anuj", "peggy"});
+        map.put("alice", new String[]{"peggy"});
+        map.put("claire", new String[]{"thom", "jonny"});
+        map.put("annuj", null);
+        map.put("peggy", null);
+        map.put("thom", null);
+        map.put("johny", null);
+        return map;
+    }
+
+
+}
